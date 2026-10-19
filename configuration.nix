@@ -3,11 +3,34 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {config, lib, pkgs, ... }:
-
+#let 
+	#originalConfig = builtins.readFile ./config/dwm/config.def.h;
+	#themedConfig = builtins.replaceStrings
+	#[
+		#''static const char col_gray1[]       = "#222222";''
+		#''static const char col_gray2[]       = "#444444";''
+		#''static const char col_gray3[]       = "#bbbbbb";''
+		#''static const char col_gray4[]       = "#eeeeee";''
+		#''static const char col_cyan[]        = "#005577";''
+		#''static const char *fonts[]          = { "monospace:size=10" };''
+#
+	#]
+	#[
+		#''static const char col_gray1[]       = "#${config.lib.stylix.colors.base04}";''
+		#''static const char col_gray2[]       = "#${config.lib.stylix.colors.base01}";''
+		#''static const char col_gray3[]       = "#${config.lib.stylix.colors.base00}";''
+		#''static const char col_gray4[]       = "#${config.lib.stylix.colors.base0D}";''
+		#''static const char col_cyan[]        = "#${config.lib.stylix.colors.base0D}";''
+		#''static const char *fonts[]          = { "${config.stylix.fonts.monospace.name}:size=10" };''
+	#]
+	#originalConfig;
+	#dwmConfig = pkgs.writeText "dwm-config.h" themedConfig;
+#in
 { 
   stylix = { 
    enable = true;
    autoEnable = false;
+   base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark.yaml";
    image = ./wallpaper/1111.png;
    polarity = "light";
    fonts = {
@@ -74,6 +97,9 @@
 		package = pkgs.dwm.overrideAttrs {
 			src = ./config/dwm;
 		};
+		#package = pkgs.dwm.override {
+			#conf = dwmConfig;
+		#};
 	};
 	
   };
@@ -91,6 +117,7 @@
   # OR
   services.pipewire = {
     enable = true;
+    alsa.enable = true;
     pulse.enable = true;
   };
 
